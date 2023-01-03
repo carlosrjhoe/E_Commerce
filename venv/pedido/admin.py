@@ -9,7 +9,7 @@ class ItemPedidoInline(admin.TabularInline):
 
 
 class PedidoAdmin(admin.ModelAdmin):
-    inline = [
+    inlines = [
         ItemPedidoInline
     ]
 
