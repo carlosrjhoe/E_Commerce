@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views import View
+from . import models
 
 
 # Create your views here.
-class ListaProdutos(View):
-    pass
+class ListaProdutos(ListView):
+    model = models.Produto
+    template_name = 'produto/lista.html'
+    context_object_name = 'produtos'
 
 class DetalheProduto(View):
     pass
