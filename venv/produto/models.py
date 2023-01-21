@@ -7,7 +7,6 @@ from produto.templatetags import filters
 
 # Create your models here.
 
-
 class Produto(models.Model):
     nome = models.CharField(max_length=255)
     descricao_curta = models.TextField(
@@ -46,18 +45,18 @@ class Produto(models.Model):
         img_pil = Image.open(img_full_path)
         original_width, original_height = img_pil.size
 
-        # if original_width <= new_width:
-        #     img_pil.close()
-        #     return
+        if original_width <= new_width:
+            img_pil.close()
+            return
 
-        # new_height = round((new_height - original_height) / original_width)
+        new_height = round((new_height - original_height) / original_width)
 
-        # new_img = img_pil.resize((new_width, new_height), Image.LANCZOS)
-        # new_img.save(
-        #     img_full_path,
-        #     optimize=True,
-        #     quality=50
-        # )
+        new_img = img_pil.resize((new_width, new_height), Image.LANCZOS)
+        new_img.save(
+            img_full_path,
+            optimize=True,
+            quality=50
+        )
 
         print(original_height, original_width)
 

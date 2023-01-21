@@ -24,15 +24,14 @@
             <span id="variation-preco" class="lead product-price">{{ produto.preco_marketing|formata_preco }}</span>
           {% endif %}
         </p>
-        <form action="/addtocart/" id="form-add-to-cart">
+        <form action="{% url 'produto:adicionaraocarrinho' %}" id="form-add-to-cart">
           <div class="form-group">
             <select id="select-variacoes" name="vid" class="form-control form-control-lg">
-              <option data-preco="R$ 59,90" data-preco-promocional="R$ 39,90" value="45">P</option>
-              <option data-preco="R$ 51,90" data-preco-promocional="R$ 49,90" value="45">M</option>
-              <option data-preco="R$ 52,90" data-preco-promocional="R$ 89,90" value="45">G</option>
+              {% for variacao in produto.variacao_set.all %}
+                <option data-preco="{{ variacao.preco_promocional | formata_preco }}" data-preco-promocional="{{ variacao.preco | formata_preco }}" value="{{ variacao.id }}">{{ variacao.nome }}</option>
+              {% endfor %}
             </select>
           </div>
-
           <div class="text-left">
             <button type="submit" class="btn btn-primary btn-lg btn-block">
               <i class="fa fa-shopping-cart" aria-hidden="true"></i>

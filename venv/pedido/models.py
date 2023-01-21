@@ -22,7 +22,7 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Pedido N: {self.pk}"
-    
+
 
 class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
