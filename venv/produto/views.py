@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views import View
 from . import models
-
+from django.contrib import messages
 
 # Create your views here.
 class ListaProdutos(ListView):
@@ -21,7 +21,21 @@ class DetalheProduto(DetailView):
 
 
 class AdicionarAoCarrinho(View):
-    pass
+    def get(self, request, *args, **kwargs):
+        http_referer = self.request.META.get(
+           'HTTP_REFERER',
+           reverse('produto:lista')
+        )
+        variacao_id = self.request.GET.get('vid')
+
+        if not variacao_id:
+            messages.error(
+                self.request,
+                'Produto não existe'
+            )
+            return redirect(http_referer)
+        
+    
 
 
 class RemoverDoCarrinho(View):
