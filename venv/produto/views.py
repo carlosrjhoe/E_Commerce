@@ -5,7 +5,6 @@ from django.views.generic.detail import DetailView
 from django.views import View
 from . import models
 from django.contrib import messages
-from pprint import pprint
 
 # Create your views here.
 class ListaProdutos(ListView):
@@ -123,18 +122,19 @@ class RemoverDoCarrinho(View):
         if not self.request.session.get('carrinho'):
             return redirect(http_referer)
 
-        if variacao_id not in self.request.session.get['carrinho']:
+        if variacao_id not in self.request.session['carrinho']:
             return redirect(http_referer)
             
-        carrinho = self.request.session.get['carrinho'][variacao_id]
+        carrinho = self.request.session['carrinho'][variacao_id]
+        
         messages.success(
             self.request,
             f'Produto {carrinho["produto_nome"]} removido do seu carrinho'
         )
 
-        del self.request.session.get['carrinho'][variacao_id]
+        del self.request.session['carrinho'][variacao_id]
         self.request.session.save()
-        return HttpResponse('Remover carrinho')
+        return redirect(http_referer)
 
 
 class Carrinho(View):
