@@ -103,7 +103,7 @@ class AdicionarAoCarrinho(View):
         self.request.session.save()
         messages.success(
             self.request,
-            f'Produto {produto_nome} {variacao_nome} adicionado ao seu carrinho {quantidade}.'
+            f'Produto {produto_nome} adicionado ao seu carrinho {quantidade}.'
         )
         return redirect(http_referer)
         
