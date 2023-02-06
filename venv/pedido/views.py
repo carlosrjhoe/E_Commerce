@@ -6,7 +6,7 @@ from django.views import View
 # Create your views here.
 class Pagar(View):
     pass
-class FecharPedido(View):
+class SalvarPedido(View):
     pass
 class Detalhe(View):
     pass
