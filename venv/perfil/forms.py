@@ -1,6 +1,6 @@
 from django import forms
-from . import models
 from django.contrib.auth.models import User
+from . import models
 
 class PerfilForm(forms.ModelForm):
     class Meta:
@@ -8,32 +8,35 @@ class PerfilForm(forms.ModelForm):
         fields = '__all__'
         exclude = ('usuario',)
 
-
 class UserForm(forms.ModelForm):
+    
     password = forms.CharField(
         required=False,
         widget=forms.PasswordInput(),
         label='Senha'
     )
+    
     password_2 = forms.CharField(
         required=False,
         widget=forms.PasswordInput(),
         label='Confirmação da Senha'
     )
     
-    def __init__(self, usuario=None, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
-
+    def __init__(self, usuario=None, *args, **kwargs, ):
+        super().__init__(*args, **kwargs)
+    
         self.usuario = usuario
     
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'password_2')
 
     def clean(self, *args, **kwargs):
         data = self.data
         cleaned = self.cleaned_data
         validation_error_msg = {}
+
+        print(data)
 
         usuario_data = cleaned.get('username')
         email_data = cleaned.get('email')
@@ -47,24 +50,54 @@ class UserForm(forms.ModelForm):
         error_msg_email_exists = 'E-mail já existe.'
         error_msg_password_match = 'As duas senhas não conferem.'
         error_msg_password_short = 'Sua senha precisa ter 6 caracteres...'
+        error_msg_required_field = 'Este campo é obrigatório.'
 
+        # Usuários logados: Atualização
         if self.usuario:
-            if usuario_data != usuario_db.username:
-                if usuario_db:
+            if usuario_db:
+                if usuario_data != usuario_db.username:
                     validation_error_msg['username'] = error_msg_user_exists
-                    
+
+            if email_db:
                 if email_data != email_db.email:
                     validation_error_msg['email'] = error_msg_email_exists
                     
-                if password_data:
-                    if password_data != password2_data:
-                        validation_error_msg['password'] = error_msg_password_match
-                        validation_error_msg['password2'] = error_msg_password_match
-                    if len(password_data):
-                        if email_db:
-                            validation_error_msg['password'] = error_msg_password_short
+            if password_data:
+                if password_data != password2_data:
+                    validation_error_msg['password'] = error_msg_password_match
+                    validation_error_msg['password2'] = error_msg_password_match
+                    
+                if len(password_data) < 6:
+                    if email_db:
+                        validation_error_msg['password'] = error_msg_password_short
+
+        # Usuários não logados: Cadastro 
         else:
-            pass
+            if usuario_db:
+                validation_error_msg['username'] = error_msg_user_exists
+
+            if email_db:
+                validation_error_msg['email'] = error_msg_email_exists
+
+            if not password_data:
+                validation_error_msg['password'] = error_msg_required_field
+
+            if not password2_data:
+                validation_error_msg['password2'] = error_msg_required_field
+
+            if password_data != password2_data:
+                validation_error_msg['password'] = error_msg_password_match
+                validation_error_msg['password2'] = error_msg_password_match
+
+            if len(password_data) < 6:
+                validation_error_msg['password'] = error_msg_password_short
+
+        if validation_error_msg:
+            raise(forms.ValidationError(validation_error_msg))
+
+            
+                
+                
 
         if validation_error_msg:
             raise(forms.ValidationError(validation_error_msg))
