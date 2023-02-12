@@ -4,7 +4,6 @@ from django.views import View
 from . import models
 from . import forms
 
-
 # Create your views here.
 class BasePerfil(View):
     template_name = 'perfil/criar.html'
@@ -36,9 +35,9 @@ class BasePerfil(View):
 
 class Criar(BasePerfil):
     def post(self, *args, **kwargs):
-        return self.renderizar
+        return self.renderiza
 
-
+    
 class Atualizar(View):
     pass
 
