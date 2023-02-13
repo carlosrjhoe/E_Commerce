@@ -36,23 +36,23 @@ class UserForm(forms.ModelForm):
         cleaned = self.cleaned_data
         validation_error_msg = {}
 
-        print(data)
-
         usuario_data = cleaned.get('username')
         email_data = cleaned.get('email')
         password_data = cleaned.get('password')
         password2_data = cleaned.get('password2')
 
+        # Selecionar campos do usuário
         usuario_db = User.objects.filter(username=usuario_data).first()
         email_db = User.objects.filter(email=email_data).first()
 
+        # Mensagens de erros
         error_msg_user_exists = 'Usuário já existe.'
         error_msg_email_exists = 'E-mail já existe.'
         error_msg_password_match = 'As duas senhas não conferem.'
         error_msg_password_short = 'Sua senha precisa ter 6 caracteres...'
         error_msg_required_field = 'Este campo é obrigatório.'
 
-        # Usuários logados: Atualização
+        # Verificar se Usuários estão logados: Atualização
         if self.usuario:
             if usuario_db:
                 if usuario_data != usuario_db.username:
@@ -68,8 +68,7 @@ class UserForm(forms.ModelForm):
                     validation_error_msg['password2'] = error_msg_password_match
                     
                 if len(password_data) < 6:
-                    if email_db:
-                        validation_error_msg['password'] = error_msg_password_short
+                    validation_error_msg['password'] = error_msg_password_short
 
         # Usuários não logados: Cadastro 
         else:
