@@ -39,7 +39,7 @@ class UserForm(forms.ModelForm):
         usuario_data = cleaned.get('username')
         email_data = cleaned.get('email')
         password_data = cleaned.get('password')
-        password2_data = cleaned.get('password2')
+        password2_data = cleaned.get('password_2')
 
         # Selecionar campos do usuário
         usuario_db = User.objects.filter(username=usuario_data).first()
@@ -65,7 +65,7 @@ class UserForm(forms.ModelForm):
             if password_data:
                 if password_data != password2_data:
                     validation_error_msg['password'] = error_msg_password_match
-                    validation_error_msg['password2'] = error_msg_password_match
+                    validation_error_msg['password_2'] = error_msg_password_match
                     
                 if len(password_data) < 6:
                     validation_error_msg['password'] = error_msg_password_short
@@ -82,11 +82,11 @@ class UserForm(forms.ModelForm):
                 validation_error_msg['password'] = error_msg_required_field
 
             if not password2_data:
-                validation_error_msg['password2'] = error_msg_required_field
+                validation_error_msg['password_2'] = error_msg_required_field
 
             if password_data != password2_data:
                 validation_error_msg['password'] = error_msg_password_match
-                validation_error_msg['password2'] = error_msg_password_match
+                validation_error_msg['password_2'] = error_msg_password_match
 
             if len(password_data) < 6:
                 validation_error_msg['password'] = error_msg_password_short
